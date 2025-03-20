@@ -21,7 +21,7 @@ public class LectureServiceConcurrencyTest {
     @Autowired
     LectureService lectureService;
     @Test
-    void 수강신청자가_30명이상일경우_30명만_성공한다() throws InterruptedException, ExecutionException {
+    void 특강신청자가_30명이상일경우_30명만_성공한다() throws InterruptedException, ExecutionException {
 
         // given
         // 강좌 생성
@@ -64,5 +64,48 @@ public class LectureServiceConcurrencyTest {
             }
         }
         Assertions.assertEquals(max,successCount);
+    }
+
+    @Test
+    void 동일한_학생이_10번을_신청하면_1번만_성공한다() throws InterruptedException, ExecutionException {
+        // given
+        // 학생 ID
+        Long studentId = 1L;
+        // 저장 ID 값 가져오기
+        Long lectureScheduleId = lectureScheduleRepository.save(LectureSchedule.builder()
+                .max(30)
+                .build())
+                .getId();
+
+
+        List<Future<Boolean>> results = new ArrayList<>();
+        int threadCount = 10;
+        // 스레드 생성
+        ExecutorService executorService = Executors.newFixedThreadPool(threadCount);
+        // 다중 스레드 환경에서 동기식으로 하기 위해 메인스레드를 대기시킬 latch
+        CountDownLatch latch = new CountDownLatch(threadCount);
+
+        for(int i = 0; i<threadCount;i++){
+            results.add(executorService.submit(()->{
+                try {
+                    lectureService.applyLecture(studentId, lectureScheduleId);
+                    return true;
+                } catch (Exception e){
+                    return false;
+                } finally {
+                    latch.countDown();
+                }
+            }));
+        }
+
+        latch.await();
+        executorService.shutdown();
+
+        int successCount = 0;
+        for(Future<Boolean> result:results){
+            if(result.get()) successCount++;
+        }
+
+        Assertions.assertEquals(1,successCount);
     }
 }
