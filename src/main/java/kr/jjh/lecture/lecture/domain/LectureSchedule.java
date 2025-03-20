@@ -3,6 +3,7 @@ package kr.jjh.lecture.lecture.domain;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
@@ -11,6 +12,7 @@ import java.time.LocalDateTime;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter
 public class LectureSchedule {
 
     @Id
@@ -21,9 +23,4 @@ public class LectureSchedule {
     private Lecture lecture;
     private LocalDateTime startDate;
     private int max;
-
-    public int getMax() {
-
-        return 30;
-    }
 }

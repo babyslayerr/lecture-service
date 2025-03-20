@@ -23,6 +23,11 @@ public class LectureService {
             throw new IllegalStateException("수강인원을 초과하였습니다.");
         }
 
+        // 한 특강에 동일한 학생이 중복 신청 불가
+        if(lectureStudentRepository.findFirstByStudentId(studentId).isPresent()){
+            throw new IllegalArgumentException("한 특강에 동일한 학생이 중복 신청은 불가합니다.");
+        }
+
         // 수강할 학생 등록
         LectureStudent lectureStudent = new LectureStudent(studentId, lectureScheduleId);
         LectureStudent savedLectureStudent = lectureStudentRepository.save(lectureStudent);
