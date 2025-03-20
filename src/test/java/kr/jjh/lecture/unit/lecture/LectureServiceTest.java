@@ -3,14 +3,16 @@ package kr.jjh.lecture.unit.lecture;
 import kr.jjh.lecture.lecture.domain.LectureSchedule;
 import kr.jjh.lecture.lecture.domain.LectureService;
 import kr.jjh.lecture.lecture.domain.LectureStudent;
-import kr.jjh.lecture.lecture.infrastructure.LectureScheduleRepository;
-import kr.jjh.lecture.lecture.infrastructure.LectureStudentRepository;
+import kr.jjh.lecture.lecture.domain.LectureScheduleRepository;
+import kr.jjh.lecture.lecture.infrastructure.LectureStudentRepositoryImpl;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
@@ -19,7 +21,7 @@ import static org.mockito.BDDMockito.given;
 public class LectureServiceTest {
 
     @Mock
-    LectureStudentRepository lectureStudentRepository;
+    LectureStudentRepositoryImpl lectureStudentRepository;
     @Mock
     LectureScheduleRepository lectureScheduleRepository;
     @InjectMocks
@@ -36,7 +38,7 @@ public class LectureServiceTest {
                 .max(30)
                 .build();
 
-        given(lectureScheduleRepository.findById(lectureScheduleId)).willReturn(lectureSchedule);
+        given(lectureScheduleRepository.findById(lectureScheduleId)).willReturn(Optional.of(lectureSchedule));
         given(lectureStudentRepository.countByLectureScheduleId(lectureScheduleId)).willReturn(15);
         given(lectureStudentRepository.save(any())).willReturn(lectureStudent);
         // when
@@ -55,7 +57,7 @@ public class LectureServiceTest {
         LectureSchedule lectureSchedule = LectureSchedule.builder()
                 .max(30)
                 .build();
-        given(lectureScheduleRepository.findById(lectureScheduleId)).willReturn(lectureSchedule);
+        given(lectureScheduleRepository.findById(lectureScheduleId)).willReturn(Optional.of(lectureSchedule));
         given(lectureStudentRepository.countByLectureScheduleId(lectureScheduleId)).willReturn(30);
 
         // when, then

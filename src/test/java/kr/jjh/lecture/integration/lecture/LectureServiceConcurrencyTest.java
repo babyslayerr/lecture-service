@@ -2,7 +2,7 @@ package kr.jjh.lecture.integration.lecture;
 
 import kr.jjh.lecture.lecture.domain.LectureSchedule;
 import kr.jjh.lecture.lecture.domain.LectureService;
-import kr.jjh.lecture.lecture.infrastructure.LectureScheduleRepository;
+import kr.jjh.lecture.lecture.domain.LectureScheduleRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
